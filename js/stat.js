@@ -37,12 +37,7 @@ var getRandomSaturationColor = function () {
 };
 
 var getColor = function (name) {
-  if (name === 'Вы') {
-    var color = PLAYER_COLOR;
-  } else {
-    color = getRandomSaturationColor();
-  }
-  return color;
+  return name === 'Вы' ? PLAYER_COLOR : getRandomSaturationColor();
 };
 
 window.renderStatistics = function (ctx, names, times) {
