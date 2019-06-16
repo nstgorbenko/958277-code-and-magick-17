@@ -23,26 +23,24 @@ var createCloud = function (ctx, x, y, color) {
 
 var getMax = function (data) {
   var max = data[0];
+
   for (var i = 1; i < data.length; i++) {
     if (data[i] > max) {
       max = data[i];
     }
   }
+
   return max;
 };
 
 var getRandomSaturationColor = function () {
   var saturation = Math.round(Math.random() * 100);
+
   return 'hsl(240, ' + saturation + '%, 50%)';
 };
 
 var getColor = function (name) {
-  if (name === 'Вы') {
-    var color = PLAYER_COLOR;
-  } else {
-    color = getRandomSaturationColor();
-  }
-  return color;
+  return name === 'Вы' ? PLAYER_COLOR : getRandomSaturationColor();
 };
 
 window.renderStatistics = function (ctx, names, times) {
