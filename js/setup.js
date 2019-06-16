@@ -11,6 +11,7 @@ var createWizard = function (wizardNames, wizardSurnames, wizardCoats, wizardEye
   newWizard.name = getRandomElement(wizardNames) + ' ' + getRandomElement(wizardSurnames);
   newWizard.coatColor = getRandomElement(wizardCoats);
   newWizard.eyesColor = getRandomElement(wizardEyes);
+
   return newWizard;
 };
 
@@ -21,6 +22,7 @@ var createWizardList = function () {
     var wizard = createWizard(NAMES, SURNAMES, COAT_COLORS, EYE_COLORS);
     wizardList.push(wizard);
   }
+
   return wizardList;
 };
 
@@ -30,6 +32,7 @@ var renderWizard = function (wizardData) {
   newWizard.querySelector('.setup-similar-label').textContent = wizardData.name;
   newWizard.querySelector('.wizard-coat').style.fill = wizardData.coatColor;
   newWizard.querySelector('.wizard-eyes').style.fill = wizardData.eyesColor;
+
   return newWizard;
 };
 
@@ -39,6 +42,7 @@ var putWizards = function (allWizards) {
   allWizards.forEach(function (eachWizard) {
     fragment.appendChild(renderWizard(eachWizard));
   });
+
   return fragment;
 };
 

@@ -29,6 +29,7 @@ var getMax = function (data) {
       max = data[i];
     }
   }
+
   return max;
 };
 
