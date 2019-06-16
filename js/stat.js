@@ -23,6 +23,7 @@ var createCloud = function (ctx, x, y, color) {
 
 var getMax = function (data) {
   var max = data[0];
+
   for (var i = 1; i < data.length; i++) {
     if (data[i] > max) {
       max = data[i];
@@ -33,6 +34,7 @@ var getMax = function (data) {
 
 var getRandomSaturationColor = function () {
   var saturation = Math.round(Math.random() * 100);
+
   return 'hsl(240, ' + saturation + '%, 50%)';
 };
 

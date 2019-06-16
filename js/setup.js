@@ -7,6 +7,7 @@ var getRandomElement = function (values) {
 
 var createWizard = function (wizardNames, wizardSurnames, wizardCoats, wizardEyes) {
   var newWizard = {};
+
   newWizard.name = getRandomElement(wizardNames) + ' ' + getRandomElement(wizardSurnames);
   newWizard.coatColor = getRandomElement(wizardCoats);
   newWizard.eyesColor = getRandomElement(wizardEyes);
@@ -15,8 +16,9 @@ var createWizard = function (wizardNames, wizardSurnames, wizardCoats, wizardEye
 
 var createWizardList = function () {
   var wizardList = [];
+
   for (var i = 0; i < WIZARD_NUMBER; i++) {
-    var wizard = createWizard(names, surnames, coatColors, eyesColors);
+    var wizard = createWizard(NAMES, SURNAMES, COAT_COLORS, EYE_COLORS);
     wizardList.push(wizard);
   }
   return wizardList;
@@ -24,6 +26,7 @@ var createWizardList = function () {
 
 var renderWizard = function (wizardData) {
   var newWizard = similarWizardTemplate.cloneNode(true);
+
   newWizard.querySelector('.setup-similar-label').textContent = wizardData.name;
   newWizard.querySelector('.wizard-coat').style.fill = wizardData.coatColor;
   newWizard.querySelector('.wizard-eyes').style.fill = wizardData.eyesColor;
@@ -32,6 +35,7 @@ var renderWizard = function (wizardData) {
 
 var putWizards = function (allWizards) {
   var fragment = document.createDocumentFragment();
+
   allWizards.forEach(function (eachWizard) {
     fragment.appendChild(renderWizard(eachWizard));
   });
@@ -39,16 +43,16 @@ var putWizards = function (allWizards) {
 };
 
 var playerSettings = document.querySelector('.setup');
-var names = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-var surnames = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
-var coatColors = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
-var eyesColors = ['black', 'red', 'blue', 'yellow', 'green'];
+var NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
+var SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
+var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
+var EYE_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 var similarWizardsList = document.querySelector('.setup-similar-list');
 var similarWizards = document.querySelector('.setup-similar');
 
-playerSettings.classList.remove('hidden');
 var wizards = createWizardList();
 var wizardsElement = putWizards(wizards);
 similarWizardsList.appendChild(wizardsElement);
 similarWizards.classList.remove('hidden');
+playerSettings.classList.remove('hidden');
