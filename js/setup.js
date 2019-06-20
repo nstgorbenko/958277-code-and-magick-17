@@ -51,22 +51,6 @@ var putWizards = function (allWizards) {
   return fragment;
 };
 
-var onPopupEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE && document.activeElement !== userNameField) {
-    closePopup();
-  }
-};
-
-var openPopup = function () {
-  playerSettings.classList.remove('hidden');
-  document.addEventListener('keydown', onPopupEscPress);
-};
-
-var closePopup = function () {
-  playerSettings.classList.add('hidden');
-  document.removeEventListener('keydown', onPopupEscPress);
-};
-
 var getNext = function (someColors) {
   var nextColor = someColors[COUNTER];
 
@@ -90,6 +74,68 @@ var chooseFillColor = function (coloredItem, colorList, itemInput) {
   }
 };
 
+var onWizardCoatClick = function () {
+  chooseFillColor(wizardCoat, COAT_COLORS, coatInput);
+};
+
+var onWizardEyesClick = function () {
+  chooseFillColor(wizardEyes, EYE_COLORS, eyesInput);
+};
+
+var onWizardFireballClick = function () {
+  chooseFillColor(wizardFireball, FIREBALL_COLORS, fireballInput);
+};
+
+var onOpenSettingsClick = function () {
+  openPopup();
+};
+
+var onOpenSettingsEnterPress = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    openPopup();
+  }
+};
+
+var onCloseSettingsClick = function () {
+  closePopup();
+};
+
+var onCloseSettingsEnterPress = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closePopup();
+  }
+};
+
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE && document.activeElement !== userNameField) {
+    closePopup();
+  }
+};
+
+var openPopup = function () {
+  playerSettings.classList.remove('hidden');
+  wizardCoat.addEventListener('click', onWizardCoatClick);
+  wizardEyes.addEventListener('click', onWizardEyesClick);
+  wizardFireball.addEventListener('click', onWizardFireballClick);
+  document.addEventListener('keydown', onPopupEscPress);
+  closeSettings.addEventListener('click', onCloseSettingsClick);
+  closeSettings.addEventListener('keydown', onCloseSettingsEnterPress);
+  openSettings.removeEventListener('click', onOpenSettingsClick);
+  openSettingsIcon.removeEventListener('keydown', onOpenSettingsEnterPress);
+};
+
+var closePopup = function () {
+  playerSettings.classList.add('hidden');
+  wizardCoat.removeEventListener('click', onWizardCoatClick);
+  wizardEyes.removeEventListener('click', onWizardEyesClick);
+  wizardFireball.removeEventListener('click', onWizardFireballClick);
+  document.removeEventListener('keydown', onPopupEscPress);
+  closeSettings.removeEventListener('click', onCloseSettingsClick);
+  closeSettings.removeEventListener('keydown', onCloseSettingsEnterPress);
+  openSettings.addEventListener('click', onOpenSettingsClick);
+  openSettingsIcon.addEventListener('keydown', onOpenSettingsEnterPress);
+};
+
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 var similarWizardsList = document.querySelector('.setup-similar-list');
 var similarWizards = document.querySelector('.setup-similar');
@@ -109,35 +155,5 @@ var wizards = createWizardList();
 var wizardsElement = putWizards(wizards);
 similarWizardsList.appendChild(wizardsElement);
 similarWizards.classList.remove('hidden');
-
-openSettings.addEventListener('click', function () {
-  openPopup();
-});
-
-openSettingsIcon.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    openPopup();
-  }
-});
-
-closeSettings.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    closePopup();
-  }
-});
-
-closeSettings.addEventListener('click', function () {
-  closePopup();
-});
-
-wizardEyes.addEventListener('click', function () {
-  chooseFillColor(wizardEyes, EYE_COLORS, eyesInput);
-});
-
-wizardCoat.addEventListener('click', function () {
-  chooseFillColor(wizardCoat, COAT_COLORS, coatInput);
-});
-
-wizardFireball.addEventListener('click', function () {
-  chooseFillColor(wizardFireball, FIREBALL_COLORS, fireballInput);
-});
+openSettings.addEventListener('click', onOpenSettingsClick);
+openSettingsIcon.addEventListener('keydown', onOpenSettingsEnterPress);
