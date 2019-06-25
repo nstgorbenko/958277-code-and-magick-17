@@ -8,6 +8,8 @@ var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 var counter = 0;
+var PLAYER_SETTINGS_LEFT = '50%';
+var PLAYER_SETTINGS_TOP = 80 + 'px';
 
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
@@ -106,6 +108,8 @@ var onPopupEscPress = function (evt) {
 };
 
 var openPopup = function () {
+  playerSettings.style.top = PLAYER_SETTINGS_TOP;
+  playerSettings.style.left = PLAYER_SETTINGS_LEFT;
   playerSettings.classList.remove('hidden');
   wizardCoat.addEventListener('click', onWizardCoatClick);
   wizardEyes.addEventListener('click', onWizardEyesClick);
@@ -115,6 +119,7 @@ var openPopup = function () {
   closeSettings.addEventListener('keydown', onCloseSettingsEnterPress);
   openSettings.removeEventListener('click', onOpenSettingsClick);
   openSettingsIcon.removeEventListener('keydown', onOpenSettingsEnterPress);
+  settingsMover.addEventListener('mousedown', onMouseDown);
 };
 
 var closePopup = function () {
@@ -127,6 +132,47 @@ var closePopup = function () {
   closeSettings.removeEventListener('keydown', onCloseSettingsEnterPress);
   openSettings.addEventListener('click', onOpenSettingsClick);
   openSettingsIcon.addEventListener('keydown', onOpenSettingsEnterPress);
+  settingsMover.removeEventListener('mousedown', onMouseDown);
+};
+
+var onMouseDown = function (evt) {
+  var moving = false;
+  var start = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moving = true;
+    var shift = {
+      x: start.x - moveEvt.clientX,
+      y: start.y - moveEvt.clientY
+    };
+
+    start = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    playerSettings.style.top = (playerSettings.offsetTop - shift.y) + 'px';
+    playerSettings.style.left = (playerSettings.offsetLeft - shift.x) + 'px';
+  };
+
+  var onMouseUp = function () {
+    var onSettingsMoverClick = function (clickEvt) {
+      clickEvt.preventDefault();
+      settingsMover.removeEventListener('click', onSettingsMoverClick);
+    };
+
+    if (moving) {
+      settingsMover.addEventListener('click', onSettingsMoverClick);
+    }
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
 };
 
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
@@ -143,6 +189,7 @@ var wizardFireball = document.querySelector('.setup-fireball-wrap');
 var coatInput = document.querySelector('input[name="coat-color"]');
 var eyesInput = document.querySelector('input[name="eyes-color"]');
 var fireballInput = document.querySelector('input[name="fireball-color"]');
+var settingsMover = playerSettings.querySelector('.upload');
 
 var wizards = createWizardList();
 var wizardsElement = putWizards(wizards);
@@ -150,3 +197,29 @@ similarWizardsList.appendChild(wizardsElement);
 similarWizards.classList.remove('hidden');
 openSettings.addEventListener('click', onOpenSettingsClick);
 openSettingsIcon.addEventListener('keydown', onOpenSettingsEnterPress);
+
+// Drag&Drop
+
+var artifacts = document.querySelectorAll('.setup-artifacts-cell img');
+var backpackPockets = document.querySelectorAll('.setup-artifacts .setup-artifacts-cell');
+
+artifacts.forEach(function (eachArtifact, index) {
+  eachArtifact.addEventListener('dragstart', function (evt) {
+    evt.dataTransfer.setData('text', index);
+  });
+});
+
+backpackPockets.forEach(function (eachPocket) {
+  eachPocket.addEventListener('dragover', function (evt) {
+    evt.preventDefault();
+  });
+});
+
+backpackPockets.forEach(function (eachPocket) {
+  var onBackPackPocketDrop = function (evt) {
+    eachPocket.appendChild(artifacts[evt.dataTransfer.getData('text')]);
+    eachPocket.removeEventListener('drop', onBackPackPocketDrop);
+  };
+
+  eachPocket.addEventListener('drop', onBackPackPocketDrop);
+});
