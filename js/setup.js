@@ -7,7 +7,7 @@ var EYE_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
-var COUNTER = 1;
+var counter = 0;
 
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
@@ -52,15 +52,8 @@ var putWizards = function (allWizards) {
 };
 
 var getNext = function (someColors) {
-  var nextColor = someColors[COUNTER];
-
-  if (COUNTER === someColors.length - 1) {
-    COUNTER = 0;
-  } else {
-    COUNTER++;
-  }
-
-  return nextColor;
+  counter = counter === someColors.length - 1 ? 0 : ++counter;
+  return someColors[counter];
 };
 
 var chooseFillColor = function (coloredItem, colorList, itemInput) {
