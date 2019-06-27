@@ -9,7 +9,7 @@ var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 var counter = 0;
 var PLAYER_SETTINGS_LEFT = '50%';
-var PLAYER_SETTINGS_TOP = 80 + 'px';
+var PLAYER_SETTINGS_TOP = '80px';
 
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
@@ -120,6 +120,7 @@ var openPopup = function () {
   openSettings.removeEventListener('click', onOpenSettingsClick);
   openSettingsIcon.removeEventListener('keydown', onOpenSettingsEnterPress);
   settingsMover.addEventListener('mousedown', onMouseDown);
+  dragDrop(artifacts, backpackPockets);
 };
 
 var closePopup = function () {
@@ -190,6 +191,8 @@ var coatInput = document.querySelector('input[name="coat-color"]');
 var eyesInput = document.querySelector('input[name="eyes-color"]');
 var fireballInput = document.querySelector('input[name="fireball-color"]');
 var settingsMover = playerSettings.querySelector('.upload');
+var artifacts = document.querySelectorAll('.setup-artifacts-cell img');
+var backpackPockets = document.querySelectorAll('.setup-artifacts .setup-artifacts-cell');
 
 var wizards = createWizardList();
 var wizardsElement = putWizards(wizards);
@@ -198,28 +201,35 @@ similarWizards.classList.remove('hidden');
 openSettings.addEventListener('click', onOpenSettingsClick);
 openSettingsIcon.addEventListener('keydown', onOpenSettingsEnterPress);
 
-// Drag&Drop
-
-var artifacts = document.querySelectorAll('.setup-artifacts-cell img');
-var backpackPockets = document.querySelectorAll('.setup-artifacts .setup-artifacts-cell');
-
-artifacts.forEach(function (eachArtifact, index) {
-  eachArtifact.addEventListener('dragstart', function (evt) {
-    evt.dataTransfer.setData('text', index);
-  });
-});
-
-backpackPockets.forEach(function (eachPocket) {
-  eachPocket.addEventListener('dragover', function (evt) {
+/**
+ * Реализует перетаскивание Drag'n'Drop
+ * @param {NodeList} draggedThings - набор перетаскиваемых HTML-элементов
+ * @param {NodeList} dropPlaces - набор принимающих HTML-элементов
+ */
+var dragDrop = function (draggedThings, dropPlaces) {
+  var onDragOver = function (evt) {
     evt.preventDefault();
-  });
-});
-
-backpackPockets.forEach(function (eachPocket) {
-  var onBackPackPocketDrop = function (evt) {
-    eachPocket.appendChild(artifacts[evt.dataTransfer.getData('text')]);
-    eachPocket.removeEventListener('drop', onBackPackPocketDrop);
   };
 
-  eachPocket.addEventListener('drop', onBackPackPocketDrop);
-});
+  draggedThings.forEach(function (elem, index) {
+    var onDragStart = function (evt) {
+      evt.dataTransfer.setData('text', index);
+    };
+
+    elem.addEventListener('dragstart', onDragStart);
+  });
+
+  dropPlaces.forEach(function (elem) {
+    elem.addEventListener('dragover', onDragOver);
+  });
+
+  dropPlaces.forEach(function (elem) {
+    var onDrop = function (evt) {
+      elem.appendChild(draggedThings[evt.dataTransfer.getData('text')]);
+      elem.removeEventListener('dragover', onDragOver);
+      elem.removeEventListener('drop', onDrop);
+    };
+
+    elem.addEventListener('drop', onDrop);
+  });
+};
