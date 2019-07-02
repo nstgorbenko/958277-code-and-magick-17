@@ -6,10 +6,20 @@
   var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
   var EYE_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 
+  /**
+   * Возвращает случайное целое число между min (включительно) и max (не включая max)
+   * @param {Number} min
+   * @param {Number} max
+   * @return {Number}
+   */
   var getRandomNumber = function (min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
   };
 
+  /**
+   * Генерирует объект с данными о случайном волшебнике
+   * @return {Object.<string, string>}
+   */
   var createWizard = function () {
     return {
       name: NAMES[getRandomNumber(0, NAMES.length)] + ' ' + SURNAMES[getRandomNumber(0, SURNAMES.length)],
@@ -18,6 +28,10 @@
     };
   };
 
+  /**
+   * Возвращает массив объектов с данными о волшебниках
+   * @return {Array.<object>}
+   */
   var createWizardList = function () {
     var wizardList = [];
 
@@ -28,6 +42,11 @@
     return wizardList;
   };
 
+  /**
+   * Создает DOM-элемент на основе объекта с данными
+   * @param {Object} wizardData - объект с данными о случайном волшебнике
+   * @return {Node}
+   */
   var renderWizard = function (wizardData) {
     var newWizard = similarWizardTemplate.cloneNode(true);
 
@@ -38,6 +57,11 @@
     return newWizard;
   };
 
+  /**
+   * Возвращает фрагмент c DOM-элементами
+   * @param {Array.<object>} allWizards - массив объектов с данными о волшебниках
+   * @return {NodeList}
+   */
   var putWizards = function (allWizards) {
     var fragment = document.createDocumentFragment();
 

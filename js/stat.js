@@ -16,11 +16,23 @@
 
   var graphTop = FONT_GAP + CONGRAT_GAP_Y * 3;
 
+  /**
+   * Отрисовывает на канвасе прямоугольное облако
+   * @param {Object} ctx - контекст отрисовки
+   * @param {Number} x - начальная координата X
+   * @param {Number} y - начальная координата Y
+   * @param {String} color - цвет облака
+   */
   var createCloud = function (ctx, x, y, color) {
     ctx.fillStyle = color;
     ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
   };
 
+  /**
+   * Возвращает максимальное значение массива
+   * @param {Array.<number>} data - массив числовых значений
+   * @return {number} максимальное значение
+   */
   var getMax = function (data) {
     var max = data[0];
 
@@ -33,16 +45,31 @@
     return max;
   };
 
+  /**
+   * Возвращает синий цвет в hsl-формате со случаным значением насыщенности
+   * @return {String} цвет
+   */
   var getRandomSaturationColor = function () {
     var saturation = Math.round(Math.random() * 100);
 
     return 'hsl(240, ' + saturation + '%, 50%)';
   };
 
+  /**
+   * Возвращает цвет, соответствующий имени игрока
+   * @param {String} name - имя игрока
+   * @return {String} цвет
+   */
   var getColor = function (name) {
     return name === 'Вы' ? PLAYER_COLOR : getRandomSaturationColor();
   };
 
+  /**
+   * Функция отрисовки статистики пройденного уровня
+   * @param {Object} ctx - контекст отрисовки
+   * @param {Array.<string>} names - массив с именами игроков, прошедших уровень
+   * @param {Arrat.<number>} times - массив с результатами прохождения уровня (время в миллисекундах)
+   */
   window.renderStatistics = function (ctx, names, times) {
     createCloud(ctx, CLOUD_X + CLOUD_GAP, CLOUD_Y + CLOUD_GAP, 'rgba(0, 0, 0, 0.7)');
     createCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');

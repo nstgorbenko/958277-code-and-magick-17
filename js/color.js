@@ -4,11 +4,22 @@
   var EYE_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
   var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 
+  /**
+   * Возвращает следующее порядковое значение цвета из массива
+   * @param {Array.<string>} someColors - массив цветов
+   * @return {String} цвет
+   */
   var getNext = function (someColors) {
     counter = counter === someColors.length - 1 ? 0 : ++counter;
     return someColors[counter];
   };
 
+  /**
+   * Меняет цвет элемента на странице и записывает это значение в соответствующий input
+   * @param {Node} coloredItem - элемент, цвет которого необходимо изменить
+   * @param {Array.<string>} colorList - массив цветов
+   * @param {Node} itemInput - input для передачи данных
+   */
   var chooseFillColor = function (coloredItem, colorList, itemInput) {
     var color = getNext(colorList);
 

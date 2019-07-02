@@ -31,6 +31,16 @@
     }
   };
 
+  var openPopupListeners = function () {
+    openSettings.addEventListener('click', onOpenSettingsClick);
+    openSettingsIcon.addEventListener('keydown', onOpenSettingsEnterPress);
+  };
+
+  var closePopupListeners = function () {
+    openSettings.removeEventListener('click', onOpenSettingsClick);
+    openSettingsIcon.removeEventListener('keydown', onOpenSettingsEnterPress);
+  };
+
   var openPopup = function () {
     window.movePopup.playerSettings.style.top = PLAYER_SETTINGS_TOP;
     window.movePopup.playerSettings.style.left = PLAYER_SETTINGS_LEFT;
@@ -46,8 +56,7 @@
     window.movePopup.settingsMover.addEventListener('mousedown', window.movePopup.onMouseDown);
     window.drag(artifacts, backpackPockets);
 
-    openSettings.removeEventListener('click', onOpenSettingsClick);
-    openSettingsIcon.removeEventListener('keydown', onOpenSettingsEnterPress);
+    closePopupListeners();
   };
 
   var closePopup = function () {
@@ -62,8 +71,7 @@
     closeSettings.removeEventListener('keydown', onCloseSettingsEnterPress);
     window.movePopup.settingsMover.removeEventListener('mousedown', window.movePopup.onMouseDown);
 
-    openSettings.addEventListener('click', onOpenSettingsClick);
-    openSettingsIcon.addEventListener('keydown', onOpenSettingsEnterPress);
+    openPopupListeners();
   };
 
   var openSettings = document.querySelector('.setup-open');
@@ -73,6 +81,5 @@
   var artifacts = document.querySelectorAll('.setup-artifacts-cell img');
   var backpackPockets = document.querySelectorAll('.setup-artifacts .setup-artifacts-cell');
 
-  openSettings.addEventListener('click', onOpenSettingsClick);
-  openSettingsIcon.addEventListener('keydown', onOpenSettingsEnterPress);
+  openPopupListeners();
 })();

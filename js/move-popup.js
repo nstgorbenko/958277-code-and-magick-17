@@ -1,5 +1,9 @@
 'use strict';
 (function () {
+  /**
+   * Реализует возможность перетаскивания окна настроек персонажа
+   * @param {Object} evt - объект события 'mousedown'
+   */
   var onMouseDown = function (evt) {
     var moving = false;
     var start = {
@@ -7,6 +11,10 @@
       y: evt.clientY
     };
 
+    /**
+     * Задает окну настроек персонажа новые координаты
+     * @param {Object} moveEvt - объект события 'mousemove'
+     */
     var onMouseMove = function (moveEvt) {
       moving = true;
       var shift = {
@@ -23,7 +31,14 @@
       playerSettings.style.left = (playerSettings.offsetLeft - shift.x) + 'px';
     };
 
+    /**
+     * Удаляет обработчики событий 'mousemove' и 'mouseup'
+     */
     var onMouseUp = function () {
+      /**
+       * Отменяет действие по умолчанию
+       * @param {Object} clickEvt - объект события 'click'
+       */
       var onSettingsMoverClick = function (clickEvt) {
         clickEvt.preventDefault();
         settingsMover.removeEventListener('click', onSettingsMoverClick);
