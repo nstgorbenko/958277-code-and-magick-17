@@ -5,16 +5,17 @@
   var CLOUD_X = 100;
   var CLOUD_Y = 10;
   var CLOUD_GAP = 10;
-  var CONGRAT_GAP_X = 20;
-  var CONGRAT_GAP_Y = 25;
-  var FONT_GAP = 16;
+  var TEXT_X = 120;
+  var TEXT_CONGRATS_Y = 41;
+  var TEXT_RESULTS_Y = 66;
+  var TEXT_PLAYERS_NAMES_Y = 262;
+  var GRAPH_X = 150;
+  var GRAPH_BOTTOM = 241;
   var GRAPH_MAX_HEIGHT = 150;
   var COLUMN_WIDTH = 40;
-  var COLUMN_GAP = 50;
-  var GRAPH_TEXT_GAP = 5;
+  var COLUMN_AREA = 90;
+  var COLUMN_TEXT_GAP = 5;
   var PLAYER_COLOR = 'rgba(255, 0, 0, 1)';
-
-  var graphTop = FONT_GAP + CONGRAT_GAP_Y * 3;
 
   /**
    * Отрисовывает на канвасе прямоугольное облако
@@ -76,21 +77,24 @@
 
     ctx.fillStyle = '#000';
     ctx.font = 'bold 16px PT Mono';
-    ctx.fillText('Ура, вы победили!', CLOUD_X + CONGRAT_GAP_X, FONT_GAP + CONGRAT_GAP_Y);
-    ctx.fillText('Список результатов:', CLOUD_X + CONGRAT_GAP_X, FONT_GAP + CONGRAT_GAP_Y * 2);
+    ctx.fillText('Ура, вы победили!', TEXT_X, TEXT_CONGRATS_Y);
+    ctx.fillText('Список результатов:', TEXT_X, TEXT_RESULTS_Y);
 
     var maxTime = getMax(times);
 
     for (var i = 0; i < names.length; i++) {
       var graphHeight = times[i] * GRAPH_MAX_HEIGHT / maxTime;
+      var columnX = GRAPH_X + COLUMN_AREA * i;
+      var columnTop = GRAPH_BOTTOM - graphHeight;
+      var playerTimeY = columnTop - COLUMN_TEXT_GAP;
       var playerColor = getColor(names[i]);
       var playerTime = Math.round(times[i]);
 
       ctx.fillStyle = playerColor;
-      ctx.fillRect(CLOUD_X + COLUMN_GAP + (COLUMN_WIDTH + COLUMN_GAP) * i, graphTop + (GRAPH_MAX_HEIGHT - graphHeight), COLUMN_WIDTH, graphHeight);
+      ctx.fillRect(columnX, columnTop, COLUMN_WIDTH, graphHeight);
       ctx.fillStyle = '#000';
-      ctx.fillText(playerTime, CLOUD_X + COLUMN_GAP + (COLUMN_WIDTH + COLUMN_GAP) * i, graphTop + (GRAPH_MAX_HEIGHT - graphHeight) - GRAPH_TEXT_GAP);
-      ctx.fillText(names[i], CLOUD_X + COLUMN_GAP + (COLUMN_WIDTH + COLUMN_GAP) * i, graphTop + GRAPH_MAX_HEIGHT + FONT_GAP + GRAPH_TEXT_GAP);
+      ctx.fillText(playerTime, columnX, playerTimeY);
+      ctx.fillText(names[i], columnX, TEXT_PLAYERS_NAMES_Y);
     }
   };
 })();
