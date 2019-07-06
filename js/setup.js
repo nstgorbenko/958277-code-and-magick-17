@@ -45,6 +45,8 @@
     window.movePopup.playerSettings.style.top = PLAYER_SETTINGS_TOP;
     window.movePopup.playerSettings.style.left = PLAYER_SETTINGS_LEFT;
     window.movePopup.playerSettings.classList.remove('hidden');
+    window.wizards.submitButton.disabled = false;
+    window.wizards.form.addEventListener('submit', window.wizards.onFormSubmit);
 
     window.color.wizardCoat.addEventListener('click', window.color.onWizardCoatClick);
     window.color.wizardEyes.addEventListener('click', window.color.onWizardEyesClick);
@@ -61,6 +63,7 @@
 
   var closePopup = function () {
     window.movePopup.playerSettings.classList.add('hidden');
+    window.wizards.form.removeEventListener('submit', window.wizards.onFormSubmit);
 
     window.color.wizardCoat.removeEventListener('click', window.color.onWizardCoatClick);
     window.color.wizardEyes.removeEventListener('click', window.color.onWizardEyesClick);
@@ -82,4 +85,8 @@
   var backpackPockets = document.querySelectorAll('.setup-artifacts .setup-artifacts-cell');
 
   openPopupListeners();
+
+  window.setup = {
+    closePopup: closePopup
+  };
 })();
