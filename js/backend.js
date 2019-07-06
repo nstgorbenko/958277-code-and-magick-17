@@ -56,7 +56,7 @@
   /**
    * Загружает данные с сервера
    * @param {RequestCallback} onLoad - коллбэк-функция для успешного выполнения запроса
-   * @param {RequestCallback} onError - коллбэк-функция для успешного выполнения запроса
+   * @param {RequestCallback} onError - коллбэк-функция для неуспешного выполнения запроса
    */
   var load = function (onLoad, onError) {
     createXhr(onLoad, onError, GET, GET_URL);
@@ -66,7 +66,7 @@
    * Отправляет данные на сервер
    * @param {*} data - данные для передачи на сервер
    * @param {RequestCallback} onLoad - коллбэк-функция для успешного выполнения запроса
-   * @param {RequestCallback} onError - коллбэк-функция для успешного выполнения запроса
+   * @param {RequestCallback} onError - коллбэк-функция для неуспешного выполнения запроса
    */
   var save = function (data, onLoad, onError) {
     createXhr(onLoad, onError, POST, POST_URL, data);

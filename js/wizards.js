@@ -35,7 +35,7 @@
    * Коллбэк-функция, отрисовывает похожих волшебников на странице
    * @param {Array.<object>} data - массив объектов с данными о волшебниках
    */
-  var successLoadHandler = function (data) {
+  var onSuccessLoad = function (data) {
     similarWizardsList.appendChild(putWizards(data));
     similarWizards.classList.remove('hidden');
   };
@@ -44,7 +44,7 @@
    * Коллбэк-функция, выводит сообщение об ошибке
    * @param {String} error - сообщение об ошибке
    */
-  var errorHandler = function (error) {
+  var onErrorLoad = function (error) {
     var errorMessage = document.createElement('div');
     errorMessage.style = 'z-index: 10; text-align: center; background-color: white; border: 2px solid red; position: absolute; left: 0; right: 0; font-size: 20; color: red;';
     errorMessage.textContent = error;
@@ -54,7 +54,7 @@
   /**
    * Коллбэк-функция, закрывает окно настроек персонажа
    */
-  var successSubmitHandler = function () {
+  var onSuccessSubmit = function () {
     window.setup.closePopup();
   };
 
@@ -64,7 +64,7 @@
    */
   var onFormSubmit = function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(form), successSubmitHandler, errorHandler);
+    window.backend.save(new FormData(form), onSuccessSubmit, onErrorLoad);
     submitButton.disabled = true;
   };
 
@@ -74,7 +74,7 @@
   var similarWizardsList = form.querySelector('.setup-similar-list');
   var similarWizards = form.querySelector('.setup-similar');
 
-  window.backend.load(successLoadHandler, errorHandler);
+  window.backend.load(onSuccessLoad, onErrorLoad);
 
   window.wizards = {
     form: form,
