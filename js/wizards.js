@@ -1,47 +1,6 @@
 'use strict';
 (function () {
   var WIZARD_NUMBER = 4;
-  var NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-  var SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
-  var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
-  var EYE_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
-
-  /**
-   * Возвращает случайное целое число между min (включительно) и max (не включая max)
-   * @param {Number} min
-   * @param {Number} max
-   * @return {Number}
-   */
-  var getRandomNumber = function (min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-  };
-
-  /**
-   * Генерирует объект с данными о случайном волшебнике
-   * @return {Object.<string, string>}
-   */
-  var createWizard = function () {
-    return {
-      name: NAMES[getRandomNumber(0, NAMES.length)] + ' ' + SURNAMES[getRandomNumber(0, SURNAMES.length)],
-      coatColor: COAT_COLORS[getRandomNumber(0, COAT_COLORS.length)],
-      eyesColor: EYE_COLORS[getRandomNumber(0, EYE_COLORS.length)]
-    };
-  };
-
-  /**
-   * Возвращает массив объектов с данными о волшебниках
-   * @return {Array.<object>}
-   */
-  var createWizardList = function () {
-    var wizardList = [];
-
-    for (var i = 0; i < WIZARD_NUMBER; i++) {
-      wizardList.push(createWizard());
-    }
-
-    return wizardList;
-  };
-
   /**
    * Создает DOM-элемент на основе объекта с данными
    * @param {Object} wizardData - объект с данными о случайном волшебнике
@@ -51,8 +10,8 @@
     var newWizard = similarWizardTemplate.cloneNode(true);
 
     newWizard.querySelector('.setup-similar-label').textContent = wizardData.name;
-    newWizard.querySelector('.wizard-coat').style.fill = wizardData.coatColor;
-    newWizard.querySelector('.wizard-eyes').style.fill = wizardData.eyesColor;
+    newWizard.querySelector('.wizard-coat').style.fill = wizardData.colorCoat;
+    newWizard.querySelector('.wizard-eyes').style.fill = wizardData.colorEyes;
 
     return newWizard;
   };
@@ -65,19 +24,61 @@
   var putWizards = function (allWizards) {
     var fragment = document.createDocumentFragment();
 
-    allWizards.forEach(function (eachWizard) {
-      fragment.appendChild(renderWizard(eachWizard));
-    });
+    for (var i = 0; i < WIZARD_NUMBER; i++) {
+      fragment.appendChild(renderWizard(allWizards[i]));
+    }
 
     return fragment;
   };
 
-  var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
-  var similarWizardsList = document.querySelector('.setup-similar-list');
-  var similarWizards = document.querySelector('.setup-similar');
+  /**
+   * Коллбэк-функция, отрисовывает похожих волшебников на странице
+   * @param {Array.<object>} data - массив объектов с данными о волшебниках
+   */
+  var onSuccessLoad = function (data) {
+    similarWizardsList.appendChild(putWizards(data));
+    similarWizards.classList.remove('hidden');
+  };
 
-  var wizards = createWizardList();
-  var wizardsElement = putWizards(wizards);
-  similarWizardsList.appendChild(wizardsElement);
-  similarWizards.classList.remove('hidden');
+  /**
+   * Коллбэк-функция, выводит сообщение об ошибке
+   * @param {String} error - сообщение об ошибке
+   */
+  var onErrorLoad = function (error) {
+    var errorMessage = document.createElement('div');
+    errorMessage.style = 'z-index: 10; text-align: center; background-color: white; border: 2px solid red; position: absolute; left: 0; right: 0; font-size: 20; color: red;';
+    errorMessage.textContent = error;
+    document.body.insertAdjacentElement('afterbegin', errorMessage);
+  };
+
+  /**
+   * Коллбэк-функция, закрывает окно настроек персонажа
+   */
+  var onSuccessSubmit = function () {
+    window.setup.closePopup();
+  };
+
+  /**
+   * Отправляет данные на сервер
+   * @param {Object} evt - объект события 'submit'
+   */
+  var onFormSubmit = function (evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(form), onSuccessSubmit, onErrorLoad);
+    submitButton.disabled = true;
+  };
+
+  var form = document.querySelector('.setup-wizard-form');
+  var submitButton = form.querySelector('.setup-submit');
+  var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
+  var similarWizardsList = form.querySelector('.setup-similar-list');
+  var similarWizards = form.querySelector('.setup-similar');
+
+  window.backend.load(onSuccessLoad, onErrorLoad);
+
+  window.wizards = {
+    form: form,
+    submitButton: submitButton,
+    onFormSubmit: onFormSubmit
+  };
 })();
