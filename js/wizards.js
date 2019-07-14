@@ -32,12 +32,24 @@
   };
 
   /**
-   * Коллбэк-функция, отрисовывает похожих волшебников на странице
+   * Отрисовывает похожих волшебников на странице
+   * @param {Array.<object>} data - массив объектов с данными о волшебниках
+   */
+  var renderSimilarWizards = function (data) {
+    similarWizardsList.innerHTML = '';
+    similarWizardsList.appendChild(putWizards(data));
+    similarWizards.classList.remove('hidden');
+  };
+
+  /**
+   * Коллбэк-функция, принимает данные с сервера, отрисовывает на их основе волшебников
    * @param {Array.<object>} data - массив объектов с данными о волшебниках
    */
   var onSuccessLoad = function (data) {
-    similarWizardsList.appendChild(putWizards(data));
-    similarWizards.classList.remove('hidden');
+    data.forEach(function (item) {
+      wizards.push(item);
+    });
+    renderSimilarWizards(wizards);
   };
 
   /**
@@ -73,12 +85,16 @@
   var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
   var similarWizardsList = form.querySelector('.setup-similar-list');
   var similarWizards = form.querySelector('.setup-similar');
+  var wizards = [];
 
   window.backend.load(onSuccessLoad, onErrorLoad);
 
   window.wizards = {
     form: form,
+    wizards: wizards,
     submitButton: submitButton,
-    onFormSubmit: onFormSubmit
+
+    onFormSubmit: onFormSubmit,
+    renderSimilarWizards: renderSimilarWizards
   };
 })();
