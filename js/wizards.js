@@ -33,23 +33,23 @@
 
   /**
    * Отрисовывает похожих волшебников на странице
-   * @param {Array.<object>} data - массив объектов с данными о волшебниках
+   * @param {Array.<object>} receivedWizards - массив объектов с данными о волшебниках
    */
-  var renderSimilarWizards = function (data) {
+  var renderSimilarWizards = function (receivedWizards) {
     similarWizardsList.innerHTML = '';
-    similarWizardsList.appendChild(putWizards(data));
+    similarWizardsList.appendChild(putWizards(receivedWizards));
     similarWizards.classList.remove('hidden');
   };
 
   /**
    * Коллбэк-функция, принимает данные с сервера, отрисовывает на их основе волшебников
-   * @param {Array.<object>} data - массив объектов с данными о волшебниках
+   * @param {Array.<object>} serverData - массив объектов с данными о волшебниках
    */
-  var onSuccessLoad = function (data) {
-    data.forEach(function (item) {
-      wizards.push(item);
+  var onSuccessLoad = function (serverData) {
+    serverData.forEach(function (item) {
+      wizardsList.push(item);
     });
-    renderSimilarWizards(wizards);
+    renderSimilarWizards(wizardsList);
   };
 
   /**
@@ -85,13 +85,13 @@
   var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
   var similarWizardsList = form.querySelector('.setup-similar-list');
   var similarWizards = form.querySelector('.setup-similar');
-  var wizards = [];
+  var wizardsList = [];
 
   window.backend.load(onSuccessLoad, onErrorLoad);
 
   window.wizards = {
     form: form,
-    wizards: wizards,
+    wizardsList: wizardsList,
     submitButton: submitButton,
 
     onFormSubmit: onFormSubmit,

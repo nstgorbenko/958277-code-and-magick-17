@@ -4,25 +4,31 @@
   var EYE_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
   var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
   var DEBOUNCE_INTERVAL = 500;
+  var COAT_SCORE = 2;
+  var EYE_SCORE = 1;
 
   /**
-   * Возвращает следующее порядковое значение цвета из массива
+   * Возвращает функцию, определяющую следующее порядковое значение цвета из массива
    * @param {Array.<string>} someColors - массив цветов
-   * @return {String} цвет
+   * @return {Function}
    */
   var getNext = function (someColors) {
-    counter = counter >= someColors.length - 1 ? 0 : ++counter;
-    return someColors[counter];
+    var counter = 0;
+
+    return function () {
+      counter = counter === someColors.length - 1 ? 0 : ++counter;
+      return someColors[counter];
+    };
   };
 
   /**
    * Меняет цвет элемента на странице и записывает это значение в соответствующий input
    * @param {Node} coloredItem - элемент, цвет которого необходимо изменить
-   * @param {Array.<string>} colorList - массив цветов
    * @param {Node} itemInput - input для передачи данных
+   * @param {RequestCallback} colorCounter - функция, возвращает следующее порядковое значение цвета из массива
    */
-  var chooseFillColor = function (coloredItem, colorList, itemInput) {
-    var color = getNext(colorList);
+  var chooseFillColor = function (coloredItem, itemInput, colorCounter) {
+    var color = colorCounter();
 
     itemInput.value = color;
     if (coloredItem.tagName === 'use') {
@@ -39,8 +45,9 @@
    */
   var getPoints = function (wizard) {
     var points = 0;
-    points = wizard.colorCoat === coatColor ? points + 2 : points;
-    points = wizard.colorEyes === eyesColor ? points + 1 : points;
+    points = wizard.colorCoat === coatColor ? points + COAT_SCORE : points;
+    points = wizard.colorEyes === eyesColor ? points + EYE_SCORE : points;
+
     return points;
   };
 
@@ -55,16 +62,20 @@
   };
 
   /**
+   * Функция сравнения похожих волшебников на основании начисленных баллов и их имен
+   * @param {Object} first - первый волшебник
+   * @param {Object} second - второй волшебник
+   * @return {Number} - результат сравнения
+   */
+  var compareWizards = function (first, second) {
+    return getPoints(second) - getPoints(first) === 0 ? sortNames(first.name, second.name) : getPoints(second) - getPoints(first);
+  };
+
+  /**
    * Отрисовывает волшебников, похожих на выбранного персонажа
    */
   var updateWizards = function () {
-    window.wizards.renderSimilarWizards(window.wizards.wizards.sort(function (first, second) {
-      var order = getPoints(second) - getPoints(first);
-      if (order === 0) {
-        order = sortNames(first.name, second.name);
-      }
-      return order;
-    }));
+    window.wizards.renderSimilarWizards(window.wizards.wizardsList.sort(compareWizards));
   };
 
   /**
@@ -83,7 +94,7 @@
    * Меняет цвет плаща волшебника по клику, отрисовывает похожих волшебников
    */
   var onWizardCoatClick = function () {
-    chooseFillColor(wizardCoat, COAT_COLORS, coatInput);
+    chooseFillColor(wizardCoat, coatInput, coatCounter);
     coatColor = coatInput.value;
     debounce();
   };
@@ -92,7 +103,7 @@
    * Меняет цвет глаз волшебника по клику, отрисовывает похожих волшебников
    */
   var onWizardEyesClick = function () {
-    chooseFillColor(wizardEyes, EYE_COLORS, eyesInput);
+    chooseFillColor(wizardEyes, eyesInput, eyesCounter);
     eyesColor = eyesInput.value;
     debounce();
   };
@@ -101,10 +112,9 @@
    * Меняет цвет файербола волшебника по клику
    */
   var onWizardFireballClick = function () {
-    chooseFillColor(wizardFireball, FIREBALL_COLORS, fireballInput);
+    chooseFillColor(wizardFireball, fireballInput, fireballCounter);
   };
 
-  var counter = 0;
   var wizardCoat = document.querySelector('.wizard-coat');
   var wizardEyes = document.querySelector('.wizard-eyes');
   var wizardFireball = document.querySelector('.setup-fireball-wrap');
@@ -114,6 +124,9 @@
   var timeOut;
   var coatColor = COAT_COLORS[0];
   var eyesColor = EYE_COLORS[0];
+  var coatCounter = getNext(COAT_COLORS);
+  var eyesCounter = getNext(EYE_COLORS);
+  var fireballCounter = getNext(FIREBALL_COLORS);
 
   window.color = {
     wizardCoat: wizardCoat,
