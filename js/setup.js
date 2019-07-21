@@ -74,6 +74,7 @@
     window.movePopup.playerSettings.classList.remove('hidden');
     window.wizards.submitButton.disabled = false;
     window.wizards.form.addEventListener('submit', window.wizards.onFormSubmit);
+    window.avatar.fileChooser.addEventListener('change', window.avatar.onFileChooserChange);
 
     window.color.wizardCoat.addEventListener('click', window.color.onWizardCoatClick);
     window.color.wizardEyes.addEventListener('click', window.color.onWizardEyesClick);
@@ -94,6 +95,7 @@
   var closePopup = function () {
     window.movePopup.playerSettings.classList.add('hidden');
     window.wizards.form.removeEventListener('submit', window.wizards.onFormSubmit);
+    window.avatar.fileChooser.removeEventListener('change', window.avatar.onFileChooserChange);
 
     window.color.wizardCoat.removeEventListener('click', window.color.onWizardCoatClick);
     window.color.wizardEyes.removeEventListener('click', window.color.onWizardEyesClick);
